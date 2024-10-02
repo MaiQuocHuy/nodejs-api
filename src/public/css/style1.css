@@ -1,0 +1,152 @@
+/* public/css/style.css */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  background-color: #f4f4f9;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.container {
+  background-color: white;
+  padding: 20px;
+  max-width: 500px;
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+form {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+form input[type="text"] {
+  width: 75%;
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+form button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+form button:hover {
+  background-color: #218838;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  background-color: #fff;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+}
+
+li:hover {
+  transform: scale(1.02);
+}
+
+/* Style cho phần thông tin công việc (title) */
+li .task-info {
+  flex-grow: 1;
+  text-align: left;
+  padding-right: 15px;
+  /* Tạo khoảng cách giữa tiêu đề và nút */
+  font-size: 1.2rem;
+  /* Kích thước chữ lớn hơn */
+  font-weight: bold;
+  /* In đậm tiêu đề */
+}
+
+
+li button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+li form {
+  display: inline-block;
+}
+
+/* Tạo một div để chứa cả hai nút ở bên phải */
+li .task-actions {
+  display: flex;
+  gap: 10px;
+}
+
+button.delete-btn {
+  color: #dc3545;
+  font-size: 1.2rem;
+  padding: 5px;
+}
+
+button.complete-btn {
+  color: #28a745;
+  font-size: 1.2rem;
+  padding: 5px;
+}
+
+.completed {
+  text-decoration: line-through;
+  color: #888;
+}
+
+/* Additional Styles for Responsive Design */
+@media (max-width: 600px) {
+  form input[type="text"] {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  form button {
+    width: 100%;
+    padding: 10px;
+  }
+
+  li {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  li .task-actions {
+    margin-top: 10px;
+  }
+}
