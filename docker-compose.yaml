@@ -8,14 +8,16 @@ services:
       MYSQL_DATABASE: nodejsapi
     ports:
       - "3307:3306"
-
+    expose:
+      - 3306
   app:
     build:
       context: .
       dockerfile: Dockerfile
     restart: unless-stopped
     environment:
-      MYSQL_ADDON_HOST: host.docker.internal
+      MYSQL_ADDON_HOST: db
+      MYSQL_ADDON_PORT: 3306
     ports:
      - "3000:3000"
     
