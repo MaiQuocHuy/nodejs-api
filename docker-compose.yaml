@@ -9,7 +9,7 @@ services:
     ports:
       - "3307:3306"
     expose:
-      - 3306
+      - 3308
   app:
     build:
       context: .
@@ -17,7 +17,7 @@ services:
     restart: unless-stopped
     environment:
       MYSQL_ADDON_HOST: db
-      MYSQL_ADDON_PORT: 3306
+      MYSQL_ADDON_PORT: 3308
     ports:
      - "3000:3000"
     
