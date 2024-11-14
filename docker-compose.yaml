@@ -1,0 +1,21 @@
+
+services: 
+  db:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456789
+      MYSQL_DATABASE: nodejsapi
+    ports:
+      - "3307:3306"
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      MYSQL_ADDON_HOST: host.docker.internal
+    ports:
+     - "3000:3000"
+    
