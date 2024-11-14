@@ -19,7 +19,7 @@ jobs:
 
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v4
-        # id: docker_build
+        id: docker_build
         with:
           context: ./
           # file: ./Dockerfile
@@ -27,5 +27,5 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/nodejsapi:latest
 
-      # - name: Verify Digest
-      #   run: echo "${{ steps.docker_build.outputs.digest }}"
+      - name: Verify Digest
+        run: echo "${{ steps.docker_build.outputs.digest }}"
