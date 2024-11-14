@@ -1,11 +1,11 @@
 name: nodejs_mysql
-on 
+on:
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   docker:
     runs-on: ubuntu-latest
-    steps: 
+    steps:
       - name: Checkout
         uses: actions/checkout@v2
