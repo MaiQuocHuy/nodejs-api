@@ -1,3 +1,34 @@
+# # name: nodejs_mysql
+
+# # on:
+# #   push:
+# #     branches: [main]
+
+# # jobs:
+# #   docker:
+# #     runs-on: ubuntu-latest
+# #     steps:
+# #       - name: Checkout
+# #         uses: actions/checkout@v3
+
+# #       - name: Login to Docker Hub
+# #         uses: docker/login-action@v2
+# #         with:
+# #           username: ${{ secrets.DOCKER_HUB_USERNAME }}
+# #           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+# #       - name: Build and Push Docker Image
+# #         uses: docker/build-push-action@v4
+# #         id: docker_build
+# #         with:
+# #           context: ./
+# #           # file: ./Dockerfile
+# #           # builder: ${{ steps.buildx.outputs.name }}
+# #           push: true
+# #           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/nodejsapi:latest
+
+# #       - name: Verify Digest
+# #         run: echo "${{ steps.docker_build.outputs.digest }}"
 # name: nodejs_mysql
 
 # on:
@@ -17,47 +48,67 @@
 #           username: ${{ secrets.DOCKER_HUB_USERNAME }}
 #           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
+#       - name: Set up Docker Buildx
+#         uses: docker/setup-buildx-action@v1
+
 #       - name: Build and Push Docker Image
 #         uses: docker/build-push-action@v4
-#         id: docker_build
 #         with:
 #           context: ./
-#           # file: ./Dockerfile
-#           # builder: ${{ steps.buildx.outputs.name }}
+#           file: ./Dockerfile
 #           push: true
 #           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/nodejsapi:latest
 
 #       - name: Verify Digest
 #         run: echo "${{ steps.docker_build.outputs.digest }}"
-name: nodejs_mysql
+
+name: Build and Push Docker Image to Docker Hub
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main # Trigger on push to main branch
 
 jobs:
-  docker:
+  build:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
 
-      - name: Login to Docker Hub
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+        ports:
+          - 3307:3306
+
+    steps:
+      # Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Set up Docker Buildx (for multi-platform builds, optional)
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      # Log in to Docker Hub
+      - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+      # Build Docker image
+      - name: Build Docker image
+        run: |
+          docker build -t maiquochuy/nodejsapi .
 
-      - name: Build and Push Docker Image
-        uses: docker/build-push-action@v4
-        with:
-          context: ./
-          file: ./Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/nodejsapi:latest
+      # Push Docker image to Docker Hub
+      - name: Push Docker image to Docker Hub
+        run: |
+          docker push maiquochuy/nodejsapi
 
-      - name: Verify Digest
-        run: echo "${{ steps.docker_build.outputs.digest }}"
+      # Verify MySQL is available (optional)
+      - name: Wait for MySQL to be ready
+        run: |
+          docker run --rm --link mysql:db busybox /bin/sh -c "until nc -z -v -w30 db 3306; do sleep 1; done; echo 'MySQL is up and running!'"
