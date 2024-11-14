@@ -107,8 +107,3 @@ jobs:
       - name: Push Docker image to Docker Hub
         run: |
           docker push maiquochuy/nodejsapi
-
-      # Verify MySQL is available (optional)
-      - name: Wait for MySQL to be ready
-        run: |
-          docker run --rm --link mysql:db busybox /bin/sh -c "until nc -z -v -w30 db 3306; do sleep 1; done; echo 'MySQL is up and running!'"
