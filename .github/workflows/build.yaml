@@ -101,9 +101,12 @@ jobs:
       # Build Docker image
       - name: Build Docker image
         run: |
-          docker build -t maiquochuy/nodejsapi .
+          docker build -t maiquochuy/my-node-app-test .
 
+      # Build
+      - name: Build docker compose
+        run: docker-compose up
       # Push Docker image to Docker Hub
       - name: Push Docker image to Docker Hub
         run: |
-          docker push maiquochuy/nodejsapi
+          docker push maiquochuy/my-node-app-test
