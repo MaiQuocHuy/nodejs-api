@@ -29,150 +29,35 @@
 
 # #       - name: Verify Digest
 # #         run: echo "${{ steps.docker_build.outputs.digest }}"
-# name: nodejs_mysql
-
-# on:
-#   push:
-#     branches: [main]
-
-# jobs:
-#   docker:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout
-#         uses: actions/checkout@v3
-
-#       - name: Login to Docker Hub
-#         uses: docker/login-action@v2
-#         with:
-#           username: ${{ secrets.DOCKER_HUB_USERNAME }}
-#           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-
-#       - name: Set up Docker Buildx
-#         uses: docker/setup-buildx-action@v1
-
-#       - name: Build and Push Docker Image
-#         uses: docker/build-push-action@v4
-#         with:
-#           context: ./
-#           file: ./Dockerfile
-#           push: true
-#           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/nodejsapi:latest
-
-#       - name: Verify Digest
-#         run: echo "${{ steps.docker_build.outputs.digest }}"
-
-# name: Build and Push Docker Image to Docker Hub
-
-# on:
-#   push:
-#     branches:
-#       - main # Trigger on push to main branch
-
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
-
-#     services:
-#       mysql:
-#         image: mysql:5.7
-#         env:
-#           MYSQL_ROOT_PASSWORD: 123456789
-#           MYSQL_DATABASE: nodejsapi
-#         ports:
-#           - 3307:3306
-
-#     steps:
-#       # Checkout code
-#       - name: Checkout code
-#         uses: actions/checkout@v2
-
-#       # Set up Docker Buildx (for multi-platform builds, optional)
-#       - name: Set up Docker Buildx
-#         uses: docker/setup-buildx-action@v2
-
-#       # Log in to Docker Hub
-#       - name: Log in to Docker Hub
-#         uses: docker/login-action@v2
-#         with:
-#           username: ${{ secrets.DOCKER_HUB_USERNAME }}
-#           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-
-#       # Build Docker image
-#       - name: Build Docker image
-#         run: |
-#           docker build -t maiquochuy/my-node-app-test .
-
-#       # Build
-#       - name: Build docker compose
-#         run: docker-compose up
-#       # Push Docker image to Docker Hub
-#       - name: Push Docker image to Docker Hub
-#         run: |
-#           docker push maiquochuy/my-node-app-test
-name: Build and Push Docker Image to Docker Hub
+name: nodejs_mysql
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
-  build:
+  docker:
     runs-on: ubuntu-latest
-
-    services:
-      mysql:
-        image: mysql:5.7
-        env:
-          MYSQL_ROOT_PASSWORD: 123456789
-          MYSQL_DATABASE: nodejsapi
-        ports:
-          - 3307:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Log in to Docker Hub
+      - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      # Setup Docker Compose
-      - name: Setup Docker Compose
-        run: |
-          sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-          sudo chmod +x /usr/local/bin/docker-compose
-          docker-compose --version
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
 
-      # Build and start containers
-      - name: Build and start containers
-        run: |
-          docker compose up -d --build
-        env:
-          MYSQL_HOST: localhost
-          MYSQL_PORT: 3307
-          MYSQL_ROOT_PASSWORD: 123456789
-          MYSQL_DATABASE: nodejsapi
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./
+          file: ./Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/nodejsapi:latest
 
-      # Build and tag the image
-      - name: Build and tag Docker image
-        run: |
-          docker build -t maiquochuy/my-node-app-test:latest .
-
-      # Push to Docker Hub
-      - name: Push to Docker Hub
-        run: |
-          docker push maiquochuy/my-node-app-test:latest
-
-      # Optional: Print container logs for debugging
-      - name: Print container logs
-        if: always()
-        run: |
-          docker compose logs
+      - name: Verify Digest
+        run: echo "${{ steps.docker_build.outputs.digest }}"
