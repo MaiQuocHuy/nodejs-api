@@ -29,4 +29,4 @@ jobs:
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/nodejsapi:latest
 
       - name: Verify Digest
-        run: echo "${{ steps.docker_build.outputs.digest }}"
+        run: echo ${{ steps.docker_build.outputs.digest }}
