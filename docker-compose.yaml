@@ -16,9 +16,9 @@ services:
       - 3308
   app:
     image: my-node-app-test
-    build:
-      context: .
-      dockerfile: Dockerfile
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
     restart: unless-stopped
     environment:
       MYSQL_ADDON_HOST: db
